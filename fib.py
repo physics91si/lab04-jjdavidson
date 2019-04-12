@@ -30,6 +30,8 @@ Usage
         phi_approx(int(args[1]))
     elif args[0] == "converge" and len(args) == 1:
         phi_converge()
+    elif args[0] == "converge" and len(args) == 2:
+        create_convergence_file(args[1])
     else:
         print("Error: input not understood.\n" \
                 "    Type './fib.py help' for info on this program.")
@@ -54,7 +56,7 @@ phi_approx_output_format = \
 
 def phi_approx(n, show_output=True):
     """Return the nth-order Fibonacci approximation to the golden ratio."""
-    fib_n = fibbb(n)
+    fib_n = fib(n)
     fib_nm1 = fib(n - 1)
     phi = float(fib_n)/fib_nm1
     if show_output:
@@ -79,4 +81,16 @@ def phi_converge():
         phi_new = phi_approx(i, show_output=False)
         print(phi_converge_output_format.format(i, phi_new, phi_old))
     print("\nConverged to %.25f" % phi_new)
+
+def create_convergence_file(filename):
+    with open(filename, 'w') as file:
+        i = 3
+        phi_old = phi_approx(i - 1, show_output=False)
+        phi_new = phi_approx(i, show_output=False)
+        while phi_old != phi_new:
+            i += 1
+            phi_old = phi_new
+            phi_new = phi_approx(i, show_output=False)
+            file.write(phi_converge_output_format.format(i, phi_new, phi_old))
+            file.write("\nConverged to %.25f" % phi_new)
 if __name__ == '__main__': main()
